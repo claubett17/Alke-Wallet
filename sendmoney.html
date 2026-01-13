@@ -2,123 +2,275 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wallet - Enviar Dinero</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
     <style>
-        body { padding: 20px; background-color: #f8f9fa; }
-        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="container mt-4">
-        <h2 class="mb-4 text-center">Enviar Dinero</h2>
-        
-        <div class="form-group">
-            <label for="searchContact">Buscar contacto:</label>
-            <div class="input-group">
-                <input type="text" class="form-control" id="searchContact" placeholder="Nombre del contacto...">
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="button" id="btnSearch">Buscar</button>
-                </div>
-            </div>
-        </div>
+<div class="container">
+    <h2 class="text-center mb-4">Enviar Dinero</h2>
 
-        <button type="button" class="btn btn-success btn-block mb-4" data-toggle="modal" data-target="#addContactModal">
-            + Agregar nuevo contacto
-        </button>
+    <!-- SALDO -->
+    <p id="saldoUsuario" class="text-center font-weight-bold mb-4"></p>
 
-        <h3>Contactos</h3>
-        <ul id="contactList" class="list-group mb-4">
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <div class="contact-info">
-                    <strong>Juan Pérez</strong><br>
-                    <small class="text-muted">RUT: 12.345.678-9 | Banco Estado</small>
-                </div>
-                <button class="btn btn-sm btn-outline-primary">Seleccionar</button>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <div class="contact-info">
-                    <strong>María González</strong><br>
-                    <small class="text-muted">RUT: 9.876.543-2 | Banco de Chile</small>
-                </div>
-                <button class="btn btn-sm btn-outline-primary">Seleccionar</button>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <div class="contact-info">
-                    <strong>Carlos Tapia</strong><br>
-                    <small class="text-muted">RUT: 15.111.222-3 | Santander</small>
-                </div>
-                <button class="btn btn-sm btn-outline-primary">Seleccionar</button>
-            </li>
-        </ul>
-
-        <a href="menu.html" class="btn btn-secondary btn-block">Volver al Menú Principal</a>
+    <!-- BUSCAR CONTACTO -->
+    <div class="form-group">
+        <label>Contacto seleccionado</label>
+        <input type="text" class="form-control" id="searchContact" readonly>
     </div>
 
-    <div class="modal fade" id="addContactModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
+    <!-- BOTÓN NUEVO CONTACTO -->
+    <button class="btn btn-success btn-block mb-3" data-toggle="modal" data-target="#addContactModal">
+        + Agregar nuevo contacto
+    </button>
+
+    <!-- LISTA DE CONTACTOS -->
+    <h4>Contactos</h4>
+    <ul id="contactList" class="list-group mb-4"></ul>
+
+    <hr>
+
+    <!-- ENVÍO DE DINERO -->
+    <h4>Enviar dinero</h4>
+    <div class="form-group">
+        <label>Monto</label>
+        <input type="number" id="montoEnvio" class="form-control" min="1" step="1">
+    </div>
+
+    <button class="btn btn-primary btn-block" id="btnEnviarDinero">
+        Enviar dinero
+    </button>
+
+    <p id="mensajeEnvio" class="text-success text-center mt-3"></p>
+
+    <a href="menu.html" class="btn btn-secondary btn-block mt-3">
+        Volver al menú
+    </a>
+</div>
+
+<!-- MODAL NUEVO CONTACTO -->
+<div class="modal fade" id="addContactModal">
+    <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalLabel">Nuevo Contacto</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form id="addContactForm">
-                <div class="form-group">
-                    <label>Nombre del destinatario</label>
-                    <input type="text" class="form-control" id="newContactName" placeholder="Ej: Camila Soto" required>
-                </div>
-                <div class="form-group">
-                    <label>RUT</label>
-                    <input type="text" class="form-control" id="newContactRUT" placeholder="Ej: 12.345.678-9" required>
-                </div>
-                <div class="form-group">
-                    <label>Banco</label>
-                    <select class="form-control" id="newContactBank">
-                        <option>Banco Estado</option>
-                        <option>Banco de Chile</option>
-                        <option>Santander</option>
-                        <option>BCI</option>
-                        <option>Scotiabank</option>
-                        <option>Itaú</option>
-                        <option>Falabella</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Tipo de Cuenta</label>
-                    <select class="form-control" id="newContactType">
-                        <option>Cuenta Rut / Vista</option>
-                        <option>Cuenta Corriente</option>
-                        <option>Cuenta de Ahorro</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Número de Cuenta</label>
-                    <input type="number" class="form-control" id="newContactNumber" placeholder="Ej: 12345678" required>
-                </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-primary" id="saveContactBtn">Guardar Contacto</button>
-          </div>
+
+            <div class="modal-header">
+                <h5>Nuevo Contacto</h5>
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <form id="addContactForm">
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" id="newContactName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>RUT</label>
+                        <input type="text" id="newContactRUT" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Banco</label>
+                        <select id="newContactBank" class="form-control">
+                            <option>Banco Estado</option>
+                            <option>Banco de Chile</option>
+                            <option>Banco Santander</option>
+                            <option>BCI</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Número de cuenta</label>
+                        <input type="number" id="newContactNumber" class="form-control" required>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button class="btn btn-primary" id="saveContactBtn">Guardar</button>
+            </div>
+
         </div>
-      </div>
     </div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<!-- SCRIPTS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            // Aquí agregaremos la lógica para el botón "Guardar Contacto"
-            // y para el buscador.
+<script>
+$(document).ready(function () {
+
+    /* ===============================
+       1. SALDO INICIAL
+    =============================== */
+    const saldoInicial = 3000000;
+
+    // Inicializar saldo
+    let saldoGuardado = parseInt(localStorage.getItem('saldo'), 10);
+    if (isNaN(saldoGuardado)) {
+        localStorage.setItem('saldo', saldoInicial);
+    }
+
+    function getSaldo() {
+        let saldo = parseInt(localStorage.getItem('saldo'), 10);
+        return isNaN(saldo) ? 0 : saldo;
+    }
+
+    function formatNumero(num) {
+        return num.toLocaleString('es-CL', { minimumFractionDigits: 0 });
+    }
+
+    function mostrarSaldo() {
+        $('#saldoUsuario').text(`Saldo: $${formatNumero(getSaldo())}`);
+    }
+
+    mostrarSaldo();
+
+    /* ===============================
+       2. CONTACTOS INICIALES
+    =============================== */
+    if (!localStorage.getItem('contactos')) {
+        let contactosIniciales = [
+            { nombre: "Juan Pérez", rut: "12.345.678-9", banco: "Banco Estado", numero: "12345678" },
+            { nombre: "María González", rut: "9.876.543-2", banco: "Banco de Chile", numero: "87654321" },
+            { nombre: "Carlos Tapia", rut: "15.111.222-3", banco: "Banco Santander", numero: "15111222" }
+        ];
+        localStorage.setItem('contactos', JSON.stringify(contactosIniciales));
+    }
+
+    function mostrarContactos() {
+        let contactos = JSON.parse(localStorage.getItem('contactos')) || [];
+        $('#contactList').html('');
+
+        contactos.forEach(function (c, index) {
+            $('#contactList').append(`
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>${c.nombre}</strong><br>
+                        <small class="text-muted">
+                            RUT: ${c.rut} | ${c.banco}
+                        </small>
+                    </div>
+
+                    <div>
+                        <button 
+                            class="btn btn-sm btn-outline-primary seleccionar-contacto"
+                            data-nombre="${c.nombre}">
+                            Seleccionar
+                        </button>
+
+                        <button 
+                            class="btn btn-sm btn-outline-danger eliminar-contacto"
+                            data-index="${index}">
+                            Eliminar
+                        </button>
+                    </div>
+                </li>
+            `);
         });
-    </script>
+    }
+
+    mostrarContactos();
+
+    /* ===============================
+       3. SELECCIONAR CONTACTO
+    =============================== */
+    $(document).on('click', '.seleccionar-contacto', function () {
+        let nombre = $(this).data('nombre');
+        $('#searchContact').val(nombre);
+    });
+
+    /* ===============================
+       4. ELIMINAR CONTACTO
+    =============================== */
+    $(document).on('click', '.eliminar-contacto', function () {
+        if (!confirm('¿Seguro que deseas eliminar este contacto?')) return;
+
+        let index = $(this).data('index');
+        let contactos = JSON.parse(localStorage.getItem('contactos')) || [];
+        contactos.splice(index, 1);
+        localStorage.setItem('contactos', JSON.stringify(contactos));
+
+        mostrarContactos();
+    });
+
+    /* ===============================
+       5. AGREGAR NUEVO CONTACTO
+    =============================== */
+    $('#saveContactBtn').click(function () {
+        let nombre = $('#newContactName').val().trim();
+        let rut = $('#newContactRUT').val().trim();
+        let banco = $('#newContactBank').val();
+        let numero = $('#newContactNumber').val().trim();
+
+        if (!nombre || !rut || !numero) {
+            alert('Completa todos los campos.');
+            return;
+        }
+
+        let contactos = JSON.parse(localStorage.getItem('contactos')) || [];
+        contactos.push({ nombre, rut, banco, numero });
+        localStorage.setItem('contactos', JSON.stringify(contactos));
+
+        mostrarContactos();
+
+        $('#addContactModal').modal('hide');
+        $('#addContactForm')[0].reset();
+    });
+
+    /* ===============================
+       6. ENVÍO DE DINERO
+    =============================== */
+    $('#btnEnviarDinero').click(function () {
+        let contacto = $('#searchContact').val();
+        let monto = parseInt($('#montoEnvio').val(), 10);
+        let saldo = getSaldo();
+
+        if (!contacto) { alert('Debes seleccionar un contacto.'); return; }
+        if (!monto || monto <= 0) { alert('Ingresa un monto válido.'); return; }
+        if (monto > saldo) { alert('Saldo insuficiente.'); return; }
+
+        if (confirm(`¿Confirmas enviar $${monto.toLocaleString()} a ${contacto}?`)) {
+            // Restar saldo
+            saldo -= monto;
+            localStorage.setItem('saldo', saldo);
+            mostrarSaldo();
+
+            // Guardar movimiento en historial
+            let historial = JSON.parse(localStorage.getItem('historial')) || [];
+            historial.unshift({
+                tipo: 'Envío',
+                descripcion: `Dinero enviado a ${contacto}`,
+                monto: monto,
+                fecha: new Date().toLocaleString(),
+                esIngreso: false
+            });
+            localStorage.setItem('historial', JSON.stringify(historial));
+
+            $('#mensajeEnvio').text(`Has enviado $${monto.toLocaleString()} a ${contacto}.`);
+            $('#montoEnvio').val('');
+            $('#searchContact').val('');
+        }
+    });
+
+});
+</script>
 </body>
 </html>

@@ -3,10 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Landing page</title>
+    <title>Proyecto Final - Front End</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container-landing {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        p {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+        }
+        .btn-landing {
+            font-size: 1.2rem;
+            padding: 10px 25px;
+        }
+        @media (max-width: 576px) {
+            h1 { font-size: 2rem; }
+            p { font-size: 1rem; }
+        }
+    </style>
 </head>
 <body>
-    <h1>¡Bienvenidos al Bootcamp!</h1>
-    <p>Este es el bootcamp de TalendoDigital para Java trainee developer</p>
+    <div class="container-landing">
+        <h1>Proyecto Módulo #2 | ABP Front End</h1>
+        <p>Claudia Bettancourt</p>
+        <p>Bienvenido a mi proyecto final del Módulo Fundamentos de Desarrollo Front End</p>
+        <p>Bootcamp Full Stack Java Trainee - Talento Digital</p>
+        <a href="menu.html" class="btn btn-light btn-landing">Ir al Menú Principal</a>
+            </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
 </html>

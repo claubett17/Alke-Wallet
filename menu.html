@@ -34,29 +34,34 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
     <script>
-
         $(document).ready(function() {
-            
-            // 1. LEER EL SALDO (Igual que en deposit.html)
-            var saldo = localStorage.getItem('walletSaldo');
-            
-            // Validación estándar
-            if(saldo === null) {
-                saldo = 0;
-            } else {
-                saldo = parseInt(saldo);
+
+            // 1. LEER EL SALDO DESDE localStorage
+            let saldo = parseInt(localStorage.getItem('saldo'), 10);
+            if (isNaN(saldo)) saldo = 3000000; // saldo inicial si no existe
+            localStorage.setItem('saldo', saldo); // asegurar que siempre exista
+
+            // 2. FUNCION PARA MOSTRAR SALDO FORMATEADO
+            function mostrarSaldo() {
+                let saldoActual = parseInt(localStorage.getItem('saldo'), 10);
+                if (isNaN(saldoActual)) saldoActual = 0;
+                $('#saldoDisplay').text('$' + saldoActual.toLocaleString('es-CL'));
             }
 
-            // 2. MOSTRAR EN PANTALLA
-            // Si esto falla, es porque tu <h1> no tiene id="saldoDisplay"
-            $('#saldoDisplay').text('$' + saldo);
-
+            mostrarSaldo();
 
             // 3. CERRAR SESIÓN
             $('#btnLogout').click(function(evento) {
                 evento.preventDefault();
-                localStorage.clear(); // Borra el saldo del banco
+                localStorage.clear();
                 window.location.href = "login.html";
+            });
+
+            // 4. ACTUALIZAR SALDO AUTOMÁTICAMENTE SI CAMBIA EN OTRA PÁGINA
+            window.addEventListener('storage', function(event) {
+                if (event.key === 'saldo') {
+                    mostrarSaldo();
+                }
             });
 
         });
