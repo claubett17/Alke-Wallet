@@ -4,49 +4,46 @@
     <meta charset="UTF-8">
     <title>Wallet - Enviar Dinero</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #eeeeee; padding-top: 50px;
             padding: 20px;
         }
         .container {
             max-width: 600px;
-            background: white;
+            background: #fffdfd; padding-top: 50px;
             padding: 20px;
             border-radius: 10px;
         }
     </style>
 </head>
 <body>
-
 <div class="container">
     <h2 class="text-center mb-4">Enviar Dinero</h2>
 
-    <!-- SALDO -->
+    <!-- Saldo en la Wallet -->
     <p id="saldoUsuario" class="text-center font-weight-bold mb-4"></p>
 
-    <!-- BUSCAR CONTACTO -->
+    <!-- Buscar un Contacto -->
     <div class="form-group">
         <label>Contacto seleccionado</label>
         <input type="text" class="form-control" id="searchContact" readonly>
     </div>
 
-    <!-- BOTÓN NUEVO CONTACTO -->
+    <!-- Botón para agregar nuevo contacto -->
     <button class="btn btn-success btn-block mb-3" data-toggle="modal" data-target="#addContactModal">
         + Agregar nuevo contacto
     </button>
 
-    <!-- LISTA DE CONTACTOS -->
+    <!-- Lista Base de Contactos -->
     <h4>Contactos</h4>
     <ul id="contactList" class="list-group mb-4"></ul>
 
     <hr>
 
-    <!-- ENVÍO DE DINERO -->
+    <!-- Envío de Dinero -->
     <h4>Enviar dinero</h4>
     <div class="form-group">
         <label>Monto</label>
@@ -64,7 +61,7 @@
     </a>
 </div>
 
-<!-- MODAL NUEVO CONTACTO -->
+<!-- Modal Nuevo Contacto -->
 <div class="modal fade" id="addContactModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -109,7 +106,7 @@
     </div>
 </div>
 
-<!-- SCRIPTS -->
+<!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -117,9 +114,7 @@
 <script>
 $(document).ready(function () {
 
-    /* ===============================
-       1. SALDO INICIAL
-    =============================== */
+/* == 1. Saldo Inicial == */
     const saldoInicial = 3000000;
 
     // Inicializar saldo
@@ -143,9 +138,7 @@ $(document).ready(function () {
 
     mostrarSaldo();
 
-    /* ===============================
-       2. CONTACTOS INICIALES
-    =============================== */
+    /* == 2. Contantos Base == */
     if (!localStorage.getItem('contactos')) {
         let contactosIniciales = [
             { nombre: "Juan Pérez", rut: "12.345.678-9", banco: "Banco Estado", numero: "12345678" },
@@ -189,17 +182,13 @@ $(document).ready(function () {
 
     mostrarContactos();
 
-    /* ===============================
-       3. SELECCIONAR CONTACTO
-    =============================== */
+    /* == 3. Seleccionar Contacto == */
     $(document).on('click', '.seleccionar-contacto', function () {
         let nombre = $(this).data('nombre');
         $('#searchContact').val(nombre);
     });
 
-    /* ===============================
-       4. ELIMINAR CONTACTO
-    =============================== */
+    /* == 4. Elimiinar Contacto == */
     $(document).on('click', '.eliminar-contacto', function () {
         if (!confirm('¿Seguro que deseas eliminar este contacto?')) return;
 
@@ -211,9 +200,7 @@ $(document).ready(function () {
         mostrarContactos();
     });
 
-    /* ===============================
-       5. AGREGAR NUEVO CONTACTO
-    =============================== */
+    /* == 5. Agregar nuevo contacto == */
     $('#saveContactBtn').click(function () {
         let nombre = $('#newContactName').val().trim();
         let rut = $('#newContactRUT').val().trim();
@@ -235,9 +222,7 @@ $(document).ready(function () {
         $('#addContactForm')[0].reset();
     });
 
-    /* ===============================
-       6. ENVÍO DE DINERO
-    =============================== */
+    /* == 6. Envío de Dinero == */
     $('#btnEnviarDinero').click(function () {
         let contacto = $('#searchContact').val();
         let monto = parseInt($('#montoEnvio').val(), 10);
@@ -269,7 +254,6 @@ $(document).ready(function () {
             $('#searchContact').val('');
         }
     });
-
 });
 </script>
 </body>
