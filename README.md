@@ -1,9 +1,9 @@
-# 💰 Alky Wallet
+# 💰 Alke Wallet
 
-**Repositorio:** [https://github.com/badi11a/alky-wallet](https://github.com/badi11a/alky-wallet)
+**Repositorio:** [https://github.com/claubett17/Alke-Wallet](https://github.com/claubett17/Alke-Wallet)
 
 ## 📖 Descripción del Proyecto
-Alky Wallet es una aplicación web de billetera digital desarrollada como proyecto integrador del módulo de Frontend. Permite a los usuarios simular operaciones financieras básicas mediante una interfaz amigable construida con **HTML5, CSS3 (Bootstrap) y JavaScript (jQuery)**.
+Alke Wallet es una aplicación web de billetera digital desarrollada como proyecto académico individual del módulo Front End ejecutada con **HTML5, CSS3 (Bootstrap) y JavaScript (jQuery)**.
 
 **Funcionalidades principales:**
 * 🔐 **Autenticación:** Inicio de sesión validado (Usuario: `admin@wallet.com` / Pass: `123456`).
