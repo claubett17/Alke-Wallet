@@ -1,82 +1,106 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wallet - Depositar</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- CSS GLOBAL -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div class="container mt-5" style="max-width: 500px;">
-        <!-- Título centrado -->
-        <h2 class="text-center mb-4">Depositar Dinero</h2>
 
-        <div id="alertMensaje" class="alert" style="display: none;"></div>
-        <div class="card p-4 mb-3">
-            <form id="depositForm">
-                <div class="form-group">
-                    <label for="inputDeposito">Monto a depositar:</label>
-                    <input type="number" class="form-control" id="inputDeposito" placeholder="Ej: 1000" min="1" required>
-                </div>
-                <button type="submit" class="btn btn-success btn-block">Realizar depósito</button>
-            </form>
-        </div>
-        <a href="menu.html" class="btn btn-outline-secondary btn-block">Volver al Menú Principal</a>
+<body class="bg-light">
+
+<div class="wallet-container min-vh-100 d-flex align-items-center justify-content-center">
+
+    <div class="wallet-card">
+
+        <!-- Título principal -->
+        <h3 class="wallet-title">Depositar Dinero</h3>
+
+        <!-- Mensaje de alerta -->
+        <div id="alertMensaje" class="alert" style="display:none;"></div>
+
+        <!-- Formulario de depósito -->
+        <form id="depositForm">
+            <div class="form-group">
+                <label>Monto a depositar</label>
+                <input
+                    type="number"
+                    class="form-control form-control-lg"
+                    id="inputDeposito"
+                    placeholder="Ej: 1000"
+                    min="1"
+                    required>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-lg btn-block">
+                Realizar depósito
+            </button>
+        </form>
+
+        <!-- Botón volver al menú -->
+        <a href="menu.html" class="btn btn-dark btn-block mt-3">
+            Volver al Menú Principal
+        </a>
+
     </div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
 
-    <script>
-        $(document).ready(function() {
+    // Inicializar saldo
+    let saldoActual = parseInt(localStorage.getItem('saldo'), 10);
+    if (isNaN(saldoActual)) saldoActual = 3000000;
+    localStorage.setItem('saldo', saldoActual);
 
-            // 1. LEER EL SALDO DESDE localStorage
-            var saldoActual = parseInt(localStorage.getItem('saldo'), 10);
-            if (isNaN(saldoActual)) saldoActual = 3000000; // saldo inicial si no existe
+    // Formulario de depósito
+    $('#depositForm').submit(function(e) {
+        e.preventDefault();
+
+        let monto = parseInt($('#inputDeposito').val(), 10);
+
+        if (monto > 0) {
+            // Actualizar saldo
+            saldoActual += monto;
             localStorage.setItem('saldo', saldoActual);
 
-            // 2. MANEJAR EL DEPÓSITO
-            $('#depositForm').submit(function(evento) {
-                evento.preventDefault();
-                var montoIngresado = parseInt($('#inputDeposito').val(), 10);
-
-                if(montoIngresado > 0) {
-                    // Sumar saldo
-                    saldoActual += montoIngresado;
-                    localStorage.setItem('saldo', saldoActual);
-
-                    // Guardar en historial
-                    var historial = JSON.parse(localStorage.getItem('historial')) || [];
-                    historial.unshift({
-                        tipo: 'Depósito',
-                        descripcion: 'Depósito de saldo',
-                        monto: montoIngresado,
-                        fecha: new Date().toLocaleString(),
-                        esIngreso: true
-                    });
-                    localStorage.setItem('historial', JSON.stringify(historial));
-
-                    // Feedback
-                    $('#alertMensaje').removeClass('alert-danger').addClass('alert-success');
-                    $('#alertMensaje').text('¡Depósito exitoso!').slideDown();
-
-                    // Limpiar input
-                    $('#inputDeposito').val('');
-
-                } else {
-                    $('#alertMensaje').removeClass('alert-success').addClass('alert-danger');
-                    $('#alertMensaje').text('El monto debe ser mayor a 0').slideDown();
-                }
+            // Guardar en historial
+            let historial = JSON.parse(localStorage.getItem('historial')) || [];
+            historial.unshift({
+                tipo: 'Depósito',
+                descripcion: 'Depósito de saldo',
+                monto: monto,
+                fecha: new Date().toLocaleString(),
+                esIngreso: true
             });
+            localStorage.setItem('historial', JSON.stringify(historial));
 
-            // 3. ACTUALIZAR SALDO AUTOMÁTICAMENTE SI CAMBIA EN OTRA PÁGINA
-            window.addEventListener('storage', function(event) {
-                if (event.key === 'saldo') {
-                    saldoActual = parseInt(localStorage.getItem('saldo'), 10);
-                }
-            });
-        });
-    </script>
+            // Mostrar mensaje éxito
+            $('#alertMensaje')
+                .removeClass('alert-danger')
+                .addClass('alert-success')
+                .text('¡Depósito exitoso!')
+                .slideDown();
+
+            $('#inputDeposito').val('');
+        } else {
+            $('#alertMensaje')
+                .removeClass('alert-success')
+                .addClass('alert-danger')
+                .text('El monto debe ser mayor a 0')
+                .slideDown();
+        }
+    });
+
+});
+</script>
+
 </body>
 </html>

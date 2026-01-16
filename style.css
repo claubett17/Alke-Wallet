@@ -1,0 +1,251 @@
+/* ===============================
+   ESTILO BASE GLOBAL
+================================ */
+body {
+    background-color: #c1aecf; /* fondo sobrio */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ===============================
+   CONTENEDORES
+================================ */
+.wallet-container,
+.wallet-wrapper {
+    width: 100%;
+    max-width: 540px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ===============================
+   TARJETA PRINCIPAL
+================================ */
+.wallet-card {
+    width: 100%;
+    max-width: 520px;
+    background: #c9c5cf;
+    padding: 30px;
+    border-radius: 22px;
+    box-shadow: 0 50px 60px rgba(113, 224, 22, 0.45);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.wallet-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 50px 65px rgba(113, 224, 22, 0.6);
+}
+
+/* ===============================
+   TÍTULOS
+================================ */
+.wallet-title {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #352385;
+    margin-bottom: 30px;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+.wallet-subtitle {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #3c359b;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* ===============================
+   SALDO
+================================ */
+#saldoDisplay,
+#saldoUsuario {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 3px;
+    text-align: center;
+}
+
+.saldo-card {
+    background-color: #f0f0f5; /* gris claro y profesional */
+    color: #333;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+/* ===============================
+   FORMULARIOS
+================================ */
+input.form-control,
+select.form-control {
+    border-radius: 10px;
+    padding: 12px 14px;
+    border: 2px solid #ccc;
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+input.form-control:focus,
+select.form-control:focus {
+    outline: none;
+    border-color: #7a1fb8;
+    box-shadow: 0 0 0 0.2rem rgba(122, 31, 184, 0.25);
+}
+
+/* ===============================
+   BOTONES
+================================ */
+.wallet-card .btn {
+    font-size: 1.3rem;
+    padding: 12px;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.wallet-card .btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.wallet-card .btn:active {
+    transform: scale(0.97);
+}
+
+/* Colores de botones */
+.btn-primary {
+    background-color: #7a3d7c;
+    border-color: #58255a;
+}
+
+.btn-primary:hover {
+    background-color: #a74697;
+    border-color: #8b0675;
+}
+
+.btn-success {
+    background-color: #0a7a0f;
+    border-color: #075c0b;
+}
+
+.btn-success:hover {
+    background-color: #5ad15f;
+    border-color: #5ad15f;
+}
+
+.btn-info {
+    background-color: #882477;
+    border-color: #8b0675;
+}
+
+.btn-info:hover {
+    background-color: #e47be7;
+    border-color: #e47be7;
+}
+
+/* Últimos Movimientos */
+.btn-secondary {
+    background-color: #f3680b;
+    border-color: #853608;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background-color: #7fa2e2;
+    border-color: #7fa2e2;
+}
+
+
+.btn-warning:hover {
+    background-color: #e67e22;
+    border-color: #d6721a;
+}
+
+/* ===============================
+   LISTAS Y CONTACTOS
+================================ */
+.list-group-item {
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding: 12px 15px;
+    box-shadow: 0 4px 8px rgba(6, 122, 41, 0.08);
+}
+
+.list-group-item .d-flex {
+    align-items: center;
+}
+
+/* Botón Seleccionar */
+.seleccionar-contacto {
+    font-size: 0.9rem;
+    padding: 5px 12px;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+/* Botón Eliminar (cruz) */
+.eliminar-contacto {
+    font-size: 1.2rem;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    line-height: 1;
+    text-align: center;
+    border-radius: 50%;
+    background-color: #e70606;
+    color: #fff;
+    border: none;
+    margin-left: 10px;
+    transition: all 0.2s ease-in-out;
+}
+
+.eliminar-contacto:hover {
+    background-color: #e60000;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+/* ===============================
+   ALERTAS Y MODALES
+================================ */
+.alert {
+    border-radius: 10px;
+    padding: 12px 15px;
+}
+
+.modal-content {
+    border-radius: 14px;
+    padding: 20px;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 576px) {
+    .wallet-card {
+        padding: 30px 20px;
+    }
+
+    .wallet-title {
+        font-size: 2.4rem;
+    }
+}
+
+.btn-dark {
+    background-color: #4b4455; /* gris sobrio */
+    border-color: #3a3647;
+    color: #fff;
+}
+
+.btn-dark:hover {
+    background-color: #5a5165;
+    border-color: #4b4455;
+}
