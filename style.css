@@ -1,5 +1,5 @@
-/* ===============================
-   ESTILO BASE GLOBAL
+/* ==============================
+Estilo Base General
 ================================ */
 body {
     background-color: #c1aecf; /* fondo sobrio */
@@ -13,7 +13,7 @@ body {
 }
 
 /* ===============================
-   CONTENEDORES
+Contenedores
 ================================ */
 .wallet-container,
 .wallet-wrapper {
@@ -26,7 +26,7 @@ body {
 }
 
 /* ===============================
-   TARJETA PRINCIPAL
+Tarjeta Principal
 ================================ */
 .wallet-card {
     width: 100%;
@@ -44,7 +44,7 @@ body {
 }
 
 /* ===============================
-   TÍTULOS
+Títulos
 ================================ */
 .wallet-title {
     font-size: 2rem;
@@ -64,7 +64,7 @@ body {
 }
 
 /* ===============================
-   SALDO
+Saldo
 ================================ */
 #saldoDisplay,
 #saldoUsuario {
@@ -84,7 +84,7 @@ body {
 }
 
 /* ===============================
-   FORMULARIOS
+Formularios
 ================================ */
 input.form-control,
 select.form-control {
@@ -102,7 +102,7 @@ select.form-control:focus {
 }
 
 /* ===============================
-   BOTONES
+Botones
 ================================ */
 .wallet-card .btn {
     font-size: 1.3rem;
@@ -163,14 +163,20 @@ select.form-control:focus {
     border-color: #7fa2e2;
 }
 
+/* Volver al Menú */
+.btn-warning {
+    background-color: #f39c12; /* naranja cálido */
+    border-color: #d35400;
+    color: #fff;
+}
 
 .btn-warning:hover {
     background-color: #e67e22;
-    border-color: #d6721a;
+    border-color: #ca6f1e;
 }
 
 /* ===============================
-   LISTAS Y CONTACTOS
+Listas y Contactos
 ================================ */
 .list-group-item {
     border-radius: 10px;
@@ -214,7 +220,7 @@ select.form-control:focus {
 }
 
 /* ===============================
-   ALERTAS Y MODALES
+Alertas y Modales
 ================================ */
 .alert {
     border-radius: 10px;
@@ -227,7 +233,7 @@ select.form-control:focus {
 }
 
 /* ===============================
-   RESPONSIVE
+Responsive
 ================================ */
 @media (max-width: 576px) {
     .wallet-card {
@@ -240,12 +246,11 @@ select.form-control:focus {
 }
 
 .btn-dark {
-    background-color: #4b4455; /* gris sobrio */
-    border-color: #3a3647;
-    color: #fff;
+    background-color: #352385; /* Un color violeta resalta más */
+    border-color: #2b1055;
 }
 
 .btn-dark:hover {
-    background-color: #5a5165;
-    border-color: #4b4455;
+    background-color: #4b32a8;
+    border-color: #352385;
 }

@@ -12,91 +12,92 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="bg-light">
+<body>
 
-<div class="wallet-container min-vh-100 d-flex align-items-center justify-content-center">
-
+<div class="wallet-container">
     <div class="wallet-card">
 
-        <!-- Título principal -->
         <h3 class="wallet-title">Depositar Dinero</h3>
 
-        <!-- Mensaje de alerta -->
-        <div id="alertMensaje" class="alert" style="display:none;"></div>
+        <p id="saldoUsuario" class="text-center font-weight-bold mb-4"></p>
 
-        <!-- Formulario de depósito -->
+        <div id="alertMensaje" class="alert d-none"></div>
+
         <form id="depositForm">
             <div class="form-group">
                 <label>Monto a depositar</label>
-                <input
-                    type="number"
-                    class="form-control form-control-lg"
-                    id="inputDeposito"
-                    placeholder="Ej: 1000"
-                    min="1"
-                    required>
+                <input type="number" id="inputDeposito" class="form-control form-control-lg" min="1" required>
             </div>
 
-            <button type="submit" class="btn btn-success btn-lg btn-block">
+            <button type="submit" class="btn btn-success btn-block">
                 Realizar depósito
             </button>
         </form>
 
-        <!-- Botón volver al menú -->
         <a href="menu.html" class="btn btn-dark btn-block mt-3">
-            Volver al Menú Principal
+        Volver al Menú Principal
         </a>
 
     </div>
 </div>
 
-<!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-$(document).ready(function() {
+$(document).ready(function () {
 
-    // Inicializar saldo
-    let saldoActual = parseInt(localStorage.getItem('saldo'), 10);
-    if (isNaN(saldoActual)) saldoActual = 3000000;
-    localStorage.setItem('saldo', saldoActual);
+    function getSaldo() {
+        return parseInt(localStorage.getItem('saldo')) || 3000000;
+    }
 
-    // Formulario de depósito
-    $('#depositForm').submit(function(e) {
+    function setSaldo(valor) {
+        localStorage.setItem('saldo', valor);
+    }
+
+    function mostrarSaldo() {
+        $('#saldoUsuario').text(
+            'Saldo actual: $' + getSaldo().toLocaleString('es-CL')
+        );
+    }
+
+    mostrarSaldo();
+
+    $('#depositForm').submit(function (e) {
         e.preventDefault();
 
-        let monto = parseInt($('#inputDeposito').val(), 10);
+        const monto = parseInt($('#inputDeposito').val());
 
-        if (monto > 0) {
-            // Actualizar saldo
-            saldoActual += monto;
-            localStorage.setItem('saldo', saldoActual);
-
-            // Guardar en historial
-            let historial = JSON.parse(localStorage.getItem('historial')) || [];
-            historial.unshift({
-                tipo: 'Depósito',
-                descripcion: 'Depósito de saldo',
-                monto: monto,
-                fecha: new Date().toLocaleString(),
-                esIngreso: true
-            });
-            localStorage.setItem('historial', JSON.stringify(historial));
-
-            // Mostrar mensaje éxito
+        if (isNaN(monto) || monto <= 0) {
             $('#alertMensaje')
-                .removeClass('alert-danger')
-                .addClass('alert-success')
-                .text('¡Depósito exitoso!')
-                .slideDown();
-
-            $('#inputDeposito').val('');
-        } else {
-            $('#alertMensaje')
-                .removeClass('alert-success')
-                .addClass('alert-danger')
-                .text('El monto debe ser mayor a 0')
-                .slideDown();
+                .removeClass()
+                .addClass('alert alert-danger')
+                .text('Ingrese un monto válido')
+                .removeClass('d-none');
+            return;
         }
+
+        let saldo = getSaldo();
+        saldo += monto;
+        setSaldo(saldo);
+
+        let historial = JSON.parse(localStorage.getItem('historial')) || [];
+        historial.unshift({
+            tipo: 'Depósito',
+            descripcion: 'Depósito de dinero',
+            monto: monto,
+            fecha: new Date().toLocaleString('es-CL'),
+            esIngreso: true
+        });
+        localStorage.setItem('historial', JSON.stringify(historial));
+
+        $('#alertMensaje')
+            .removeClass()
+            .addClass('alert alert-success')
+            .text('Depósito realizado con éxito')
+            .removeClass('d-none');
+
+        $('#inputDeposito').val('');
+        mostrarSaldo();
     });
 
 });

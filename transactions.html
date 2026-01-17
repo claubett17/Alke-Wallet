@@ -2,89 +2,97 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wallet - Últimos Movimientos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <style>
-        body { background-color: #eeeeee; padding-top: 50px; }
-        .login-card { max-width: 400px; margin: 0 auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-    </style>
+
+    <!-- CSS Base General -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
 
-    <div class="container mt-5" style="max-width: 600px;">
-        <h2 class="mb-4 text-center">Últimos Movimientos</h2>
+<body class="bg-light">
 
-        <!-- SALDO ACTUAL -->
-        <div class="alert alert-info d-flex justify-content-between align-items-center">
+<div class="wallet-container">
+    <div class="wallet-card">
+
+        <!-- Título con estilo global -->
+        <h3 class="wallet-title">Últimos Movimientos</h3>
+
+        <!-- Saldo Actual -->
+        <div class="alert alert-info d-flex justify-content-between align-items-center mb-3">
             <span>Saldo Actual:</span>
-            <strong id="saldoDisplay" style="font-size: 1.2em;">$0</strong>
+            <strong id="saldoDisplay">$0</strong>
         </div>
         
-        <!-- LISTA DE MOVIMIENTOS -->
+        <!-- Lista de Movimientos -->
         <div id="listaMovimientos" class="list-group mb-4"></div>
 
-        <!-- VOLVER AL MENÚ -->
-        <a href="menu.html" class="btn btn-secondary btn-block">Volver al Menú Principal</a>
+    <!-- Volver al Manú -->
+    <a href="menu.html" class="btn btn-dark btn-block mt-3">
+    Volver al Menú Principal
+    </a>
+
     </div>
+</div>
 
-    <!-- JS -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
+<script>
+$(document).ready(function() {
 
-            // Función para mostrar el saldo actual
-            function mostrarSaldo() {
-                var saldo = parseInt(localStorage.getItem('saldo'), 10) || 0;
-                $('#saldoDisplay').text('$' + saldo.toLocaleString('es-CL'));
-            }
+    // Función para mostrar el saldo actual
+    function mostrarSaldo() {
+        var saldo = parseInt(localStorage.getItem('saldo'), 10) || 0;
+        $('#saldoDisplay').text('$' + saldo.toLocaleString('es-CL'));
+    }
 
-            // Función para cargar movimientos
-            function cargarMovimientos() {
-                var historial = JSON.parse(localStorage.getItem('historial')) || [];
-                var contenedor = $('#listaMovimientos');
-                contenedor.html('');
+    // Función para cargar movimientos
+    function cargarMovimientos() {
+        var historial = JSON.parse(localStorage.getItem('historial')) || [];
+        var contenedor = $('#listaMovimientos');
+        contenedor.html('');
 
-                if(historial.length === 0) {
-                    contenedor.html('<div class="alert alert-warning text-center">No hay movimientos registrados aún.</div>');
-                } else {
-                    historial.forEach(function(mov) {
-                        var claseColor = mov.esIngreso ? 'text-success' : 'text-danger';
-                        var signo = mov.esIngreso ? '+' : '-';
+        if(historial.length === 0) {
+            contenedor.html('<div class="alert alert-warning text-center">No hay movimientos registrados aún.</div>');
+        } else {
+            historial.forEach(function(mov) {
+                var claseColor = mov.esIngreso ? 'text-success' : 'text-danger';
+                var signo = mov.esIngreso ? '+' : '-';
 
-                        var itemHTML = `
-                            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">${mov.tipo}</h5>
-                                    <small class="${claseColor}" style="font-size: 1.1em; font-weight: bold;">
-                                        ${signo}$${mov.monto.toLocaleString('es-CL')}
-                                    </small>
-                                </div>
-                                <p class="mb-1">${mov.descripcion}</p>
-                                <small class="text-muted">${mov.fecha}</small>
-                            </a>
-                        `;
-                        contenedor.append(itemHTML);
-                    });
-                }
-            }
+                var itemHTML = `
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">${mov.tipo}</h5>
+                            <small class="${claseColor}">$${signo}${mov.monto.toLocaleString('es-CL')}</small>
+                        </div>
+                        <p class="mb-1">${mov.descripcion}</p>
+                        <small class="text-muted">${mov.fecha}</small>
+                    </div>
+                `;
+                contenedor.append(itemHTML);
+            });
+        }
+    }
 
-            // Inicializa página
+    // Inicializa página
+    mostrarSaldo();
+    cargarMovimientos();
+
+    // Listener para actualizar si hay cambios de saldo o historial en otra pestaña
+    window.addEventListener('storage', function(event) {
+        if(event.key === 'saldo' || event.key === 'historial') {
             mostrarSaldo();
             cargarMovimientos();
+        }
+    });
 
-            // Listener para actualizar si hay cambios de saldo o historial en otra pestaña
-            window.addEventListener('storage', function(event) {
-                if(event.key === 'saldo' || event.key === 'historial') {
-                    mostrarSaldo();
-                    cargarMovimientos();
-                }
-            });
+});
+</script>
 
-        });
-    </script>
 </body>
 </html>
