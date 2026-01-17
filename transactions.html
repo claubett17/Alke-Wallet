@@ -17,22 +17,23 @@
 <div class="wallet-container">
     <div class="wallet-card">
 
-        <!-- Título con estilo global -->
+        <!-- Título -->
         <h3 class="wallet-title">Últimos Movimientos</h3>
 
-        <!-- SALDO ACTUAL -->
-        <div class="alert alert-info d-flex justify-content-between align-items-center mb-3">
-            <span>Saldo Actual:</span>
+        <!-- Saldo actual -->
+        <div class="alert alert-info d-flex justify-content-between align-items-center mb-4">
+            <span>Saldo actual:</span>
             <strong id="saldoDisplay">$0</strong>
         </div>
-        
-        <!-- LISTA DE MOVIMIENTOS -->
+
+        <!-- Lista de movimientos -->
         <div id="listaMovimientos" class="list-group mb-4"></div>
 
-        <!-- VOLVER AL MENÚ -->
+        <!-- Volver -->
         <a href="menu.html" class="btn btn-dark btn-block mt-3">
-    Volver al Menú Principal
-</a>
+            Volver al Menú Principal
+        </a>
+
     </div>
 </div>
 
@@ -42,49 +43,50 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
 <script>
-$(document).ready(function() {
+$(document).ready(function () {
 
-    // Función para mostrar el saldo actual
     function mostrarSaldo() {
-        var saldo = parseInt(localStorage.getItem('saldo'), 10) || 0;
+        const saldo = parseInt(localStorage.getItem('saldo'), 10) || 0;
         $('#saldoDisplay').text('$' + saldo.toLocaleString('es-CL'));
     }
 
-    // Función para cargar movimientos
     function cargarMovimientos() {
-        var historial = JSON.parse(localStorage.getItem('historial')) || [];
-        var contenedor = $('#listaMovimientos');
-        contenedor.html('');
+        const historial = JSON.parse(localStorage.getItem('historial')) || [];
+        const contenedor = $('#listaMovimientos');
+        contenedor.empty();
 
-        if(historial.length === 0) {
-            contenedor.html('<div class="alert alert-warning text-center">No hay movimientos registrados aún.</div>');
-        } else {
-            historial.forEach(function(mov) {
-                var claseColor = mov.esIngreso ? 'text-success' : 'text-danger';
-                var signo = mov.esIngreso ? '+' : '-';
-
-                var itemHTML = `
-                    <div class="list-group-item">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">${mov.tipo}</h5>
-                            <small class="${claseColor}">$${signo}${mov.monto.toLocaleString('es-CL')}</small>
-                        </div>
-                        <p class="mb-1">${mov.descripcion}</p>
-                        <small class="text-muted">${mov.fecha}</small>
-                    </div>
-                `;
-                contenedor.append(itemHTML);
-            });
+        if (historial.length === 0) {
+            contenedor.html(
+                '<div class="alert alert-warning text-center">No hay movimientos registrados aún.</div>'
+            );
+            return;
         }
+
+        historial.forEach(function (mov) {
+            const claseColor = mov.esIngreso ? 'text-success' : 'text-danger';
+            const signo = mov.esIngreso ? '+' : '-';
+
+            contenedor.append(`
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="mb-1">${mov.tipo}</h5>
+                        <span class="${claseColor}">
+                            ${signo}$${mov.monto.toLocaleString('es-CL')}
+                        </span>
+                    </div>
+                    <p class="mb-1">${mov.descripcion}</p>
+                    <small class="text-muted">${mov.fecha}</small>
+                </div>
+            `);
+        });
     }
 
-    // Inicializa página
     mostrarSaldo();
     cargarMovimientos();
 
-    // Listener para actualizar si hay cambios de saldo o historial en otra pestaña
-    window.addEventListener('storage', function(event) {
-        if(event.key === 'saldo' || event.key === 'historial') {
+    // Actualiza si hay cambios desde otra pestaña
+    window.addEventListener('storage', function (event) {
+        if (event.key === 'saldo' || event.key === 'historial') {
             mostrarSaldo();
             cargarMovimientos();
         }

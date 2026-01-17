@@ -17,7 +17,6 @@
 <div class="wallet-container">
     <div class="wallet-card">
 
-        <!-- Título con estilo global -->
         <h3 class="wallet-title">Enviar Dinero</h3>
 
         <!-- Saldo -->
@@ -41,7 +40,6 @@
         <hr>
 
         <!-- Enviar dinero -->
-        <h5 class="mb-3">Enviar dinero</h5>
         <div class="form-group">
             <label>Monto</label>
             <input type="number" id="montoEnvio" class="form-control" min="1">
@@ -53,15 +51,15 @@
 
         <p id="mensajeEnvio" class="text-success text-center mt-3"></p>
 
-        <!-- Volver al menú -->
+        <!-- Volver -->
         <a href="menu.html" class="btn btn-dark btn-block mt-3">
-    Volver al Menú Principal
-</a>
+            Volver al Menú Principal
+        </a>
 
     </div>
 </div>
 
-<!-- Modal para agregar nuevo contacto -->
+<!-- Modal agregar contacto -->
 <div class="modal fade" id="addContactModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -116,7 +114,6 @@ $(document).ready(function () {
 
     const saldoInicial = 3000000;
 
-    // Inicializar saldo
     if (isNaN(parseInt(localStorage.getItem('saldo')))) {
         localStorage.setItem('saldo', saldoInicial);
     }
@@ -131,7 +128,6 @@ $(document).ready(function () {
 
     mostrarSaldo();
 
-    // Inicializar contactos
     if (!localStorage.getItem('contactos')) {
         localStorage.setItem('contactos', JSON.stringify([
             { nombre: "Juan Pérez", rut: "12.345.678-9", banco: "Banco Estado", numero: "12345678" },
@@ -140,37 +136,32 @@ $(document).ready(function () {
         ]));
     }
 
-    // Mostrar contactos
-   function mostrarContactos() {
-    const contactos = JSON.parse(localStorage.getItem('contactos'));
-    $('#contactList').empty();
+    function mostrarContactos() {
+        const contactos = JSON.parse(localStorage.getItem('contactos'));
+        $('#contactList').empty();
 
-    contactos.forEach((c, i) => {
-        $('#contactList').append(`
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                    <strong>${c.nombre}</strong><br>
-                    <small class="text-muted">RUT: ${c.rut} | ${c.banco}</small>
-                </div>
-                <div class="d-flex">
-                    <button class="btn seleccionar-contacto" data-nombre="${c.nombre}">
-                        Seleccionar
-                    </button>
-                    <button class="eliminar-contacto" data-index="${i}">&times;</button>
-                </div>
-            </li>
-        `);
-    });
-}
+        contactos.forEach((c, i) => {
+            $('#contactList').append(`
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>${c.nombre}</strong><br>
+                        <small class="text-muted">${c.banco}</small>
+                    </div>
+                    <div class="d-flex">
+                        <button class="btn seleccionar-contacto" data-nombre="${c.nombre}">Seleccionar</button>
+                        <button class="eliminar-contacto" data-index="${i}">&times;</button>
+                    </div>
+                </li>
+            `);
+        });
+    }
 
     mostrarContactos();
 
-    // Seleccionar contacto
     $(document).on('click', '.seleccionar-contacto', function () {
         $('#searchContact').val($(this).data('nombre'));
     });
 
-    // Eliminar contacto
     $(document).on('click', '.eliminar-contacto', function () {
         if (!confirm('¿Eliminar contacto?')) return;
         const contactos = JSON.parse(localStorage.getItem('contactos'));
@@ -179,7 +170,6 @@ $(document).ready(function () {
         mostrarContactos();
     });
 
-    // Guardar nuevo contacto
     $('#saveContactBtn').click(function () {
         const contactos = JSON.parse(localStorage.getItem('contactos'));
         contactos.push({
@@ -194,7 +184,6 @@ $(document).ready(function () {
         mostrarContactos();
     });
 
-    // Enviar dinero
     $('#btnEnviarDinero').click(function () {
         const monto = parseInt($('#montoEnvio').val());
         const contacto = $('#searchContact').val();
@@ -206,10 +195,21 @@ $(document).ready(function () {
         localStorage.setItem('saldo', saldo);
         mostrarSaldo();
 
-        $('#mensajeEnvio').text(`Has enviado $${monto.toLocaleString()} a ${contacto}`);
+        let historial = JSON.parse(localStorage.getItem('historial')) || [];
+        historial.unshift({
+            tipo: 'Transferencia',
+            monto: monto,
+            descripcion: `Transferencia a ${contacto}`,
+            fecha: new Date().toLocaleString('es-CL'),
+            esIngreso: false
+        });
+        localStorage.setItem('historial', JSON.stringify(historial));
+
+        $('#mensajeEnvio').text(`Has enviado $${monto.toLocaleString('es-CL')} a ${contacto}`);
         $('#montoEnvio').val('');
         $('#searchContact').val('');
     });
+
 });
 </script>
 

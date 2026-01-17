@@ -1,82 +1,107 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wallet - Depositar</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- CSS GLOBAL -->
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <div class="container mt-5" style="max-width: 500px;">
-        <!-- Título centrado -->
-        <h2 class="text-center mb-4">Depositar Dinero</h2>
 
-        <div id="alertMensaje" class="alert" style="display: none;"></div>
-        <div class="card p-4 mb-3">
-            <form id="depositForm">
-                <div class="form-group">
-                    <label for="inputDeposito">Monto a depositar:</label>
-                    <input type="number" class="form-control" id="inputDeposito" placeholder="Ej: 1000" min="1" required>
-                </div>
-                <button type="submit" class="btn btn-success btn-block">Realizar depósito</button>
-            </form>
-        </div>
-        <a href="menu.html" class="btn btn-outline-secondary btn-block">Volver al Menú Principal</a>
+<div class="wallet-container">
+    <div class="wallet-card">
+
+        <h3 class="wallet-title">Depositar Dinero</h3>
+
+        <p id="saldoUsuario" class="text-center font-weight-bold mb-4"></p>
+
+        <div id="alertMensaje" class="alert d-none"></div>
+
+        <form id="depositForm">
+            <div class="form-group">
+                <label>Monto a depositar</label>
+                <input type="number" id="inputDeposito" class="form-control form-control-lg" min="1" required>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-block">
+                Realizar depósito
+            </button>
+        </form>
+
+        <a href="menu.html" class="btn btn-dark btn-block mt-3">
+        Volver al Menú Principal
+        </a>
+
     </div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
+<script>
+$(document).ready(function () {
 
-            // 1. LEER EL SALDO DESDE localStorage
-            var saldoActual = parseInt(localStorage.getItem('saldo'), 10);
-            if (isNaN(saldoActual)) saldoActual = 3000000; // saldo inicial si no existe
-            localStorage.setItem('saldo', saldoActual);
+    function getSaldo() {
+        return parseInt(localStorage.getItem('saldo')) || 3000000;
+    }
 
-            // 2. MANEJAR EL DEPÓSITO
-            $('#depositForm').submit(function(evento) {
-                evento.preventDefault();
-                var montoIngresado = parseInt($('#inputDeposito').val(), 10);
+    function setSaldo(valor) {
+        localStorage.setItem('saldo', valor);
+    }
 
-                if(montoIngresado > 0) {
-                    // Sumar saldo
-                    saldoActual += montoIngresado;
-                    localStorage.setItem('saldo', saldoActual);
+    function mostrarSaldo() {
+        $('#saldoUsuario').text(
+            'Saldo actual: $' + getSaldo().toLocaleString('es-CL')
+        );
+    }
 
-                    // Guardar en historial
-                    var historial = JSON.parse(localStorage.getItem('historial')) || [];
-                    historial.unshift({
-                        tipo: 'Depósito',
-                        descripcion: 'Depósito de saldo',
-                        monto: montoIngresado,
-                        fecha: new Date().toLocaleString(),
-                        esIngreso: true
-                    });
-                    localStorage.setItem('historial', JSON.stringify(historial));
+    mostrarSaldo();
 
-                    // Feedback
-                    $('#alertMensaje').removeClass('alert-danger').addClass('alert-success');
-                    $('#alertMensaje').text('¡Depósito exitoso!').slideDown();
+    $('#depositForm').submit(function (e) {
+        e.preventDefault();
 
-                    // Limpiar input
-                    $('#inputDeposito').val('');
+        const monto = parseInt($('#inputDeposito').val());
 
-                } else {
-                    $('#alertMensaje').removeClass('alert-success').addClass('alert-danger');
-                    $('#alertMensaje').text('El monto debe ser mayor a 0').slideDown();
-                }
-            });
+        if (isNaN(monto) || monto <= 0) {
+            $('#alertMensaje')
+                .removeClass()
+                .addClass('alert alert-danger')
+                .text('Ingrese un monto válido')
+                .removeClass('d-none');
+            return;
+        }
 
-            // 3. ACTUALIZAR SALDO AUTOMÁTICAMENTE SI CAMBIA EN OTRA PÁGINA
-            window.addEventListener('storage', function(event) {
-                if (event.key === 'saldo') {
-                    saldoActual = parseInt(localStorage.getItem('saldo'), 10);
-                }
-            });
+        let saldo = getSaldo();
+        saldo += monto;
+        setSaldo(saldo);
+
+        let historial = JSON.parse(localStorage.getItem('historial')) || [];
+        historial.unshift({
+            tipo: 'Depósito',
+            descripcion: 'Depósito de dinero',
+            monto: monto,
+            fecha: new Date().toLocaleString('es-CL'),
+            esIngreso: true
         });
-    </script>
+        localStorage.setItem('historial', JSON.stringify(historial));
+
+        $('#alertMensaje')
+            .removeClass()
+            .addClass('alert alert-success')
+            .text('Depósito realizado con éxito')
+            .removeClass('d-none');
+
+        $('#inputDeposito').val('');
+        mostrarSaldo();
+    });
+
+});
+</script>
+
 </body>
 </html>
