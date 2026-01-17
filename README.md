@@ -37,8 +37,8 @@ Permite a los usuarios gestionar su dinero de forma simple y segura, realizando 
 
 El usuario y clave para acceder a la aplicación son:
 
-- **Usuario:** admin  
-- **Contraseña:** 1234  
+- **Usuario:** admin@wallet.com 
+- **Contraseña:** 123456
 
 *(Credenciales simuladas para fines académicos)*
 

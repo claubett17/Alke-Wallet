@@ -4,70 +4,68 @@
     <meta charset="UTF-8">
     <title>Wallet - Enviar Dinero</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #eeeeee; padding-top: 50px;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-            background: #fffdfd; padding-top: 50px;
-            padding: 20px;
-            border-radius: 10px;
-        }
-    </style>
+    <!-- CSS GLOBAL -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-<div class="container">
-    <h2 class="text-center mb-4">Enviar Dinero</h2>
 
-    <!-- Saldo en la Wallet -->
-    <p id="saldoUsuario" class="text-center font-weight-bold mb-4"></p>
+<body class="bg-light">
 
-    <!-- Buscar un Contacto -->
-    <div class="form-group">
-        <label>Contacto seleccionado</label>
-        <input type="text" class="form-control" id="searchContact" readonly>
-    </div>
+<div class="wallet-container">
+    <div class="wallet-card">
 
-    <!-- Botón para agregar nuevo contacto -->
-    <button class="btn btn-success btn-block mb-3" data-toggle="modal" data-target="#addContactModal">
-        + Agregar nuevo contacto
-    </button>
+        <!-- Título -->
+        <h3 class="wallet-title">Enviar Dinero</h3>
 
-    <!-- Lista Base de Contactos -->
-    <h4>Contactos</h4>
-    <ul id="contactList" class="list-group mb-4"></ul>
+        <!-- Saldo -->
+        <p id="saldoUsuario" class="text-center font-weight-bold mb-4"></p>
 
-    <hr>
+        <!-- Contacto seleccionado -->
+        <div class="form-group">
+            <label>Contacto seleccionado</label>
+            <input type="text" class="form-control" id="searchContact" readonly>
+        </div>
 
-    <!-- Envío de Dinero -->
-    <h4>Enviar dinero</h4>
-    <div class="form-group">
-        <label>Monto</label>
-        <input type="number" id="montoEnvio" class="form-control" min="1" step="1">
-    </div>
+        <!-- Botón agregar contacto -->
+        <button class="btn btn-success btn-block mb-3" data-toggle="modal" data-target="#addContactModal">
+            + Agregar nuevo contacto
+        </button>
 
-    <button class="btn btn-primary btn-block" id="btnEnviarDinero">
-        Enviar dinero
-    </button>
+        <!-- Lista de contactos -->
+        <h5 class="mb-3">Contactos</h5>
+        <ul id="contactList" class="list-group mb-4"></ul>
 
-    <p id="mensajeEnvio" class="text-success text-center mt-3"></p>
+        <hr>
 
-    <a href="menu.html" class="btn btn-secondary btn-block mt-3">
-        Volver al menú
+        <!-- Enviar dinero -->
+        <div class="form-group">
+            <label>Monto</label>
+            <input type="number" id="montoEnvio" class="form-control" min="1">
+        </div>
+
+        <button class="btn btn-primary btn-block mb-3" id="btnEnviarDinero">
+            Enviar dinero
+        </button>
+
+        <p id="mensajeEnvio" class="text-success text-center mt-2"></p>
+
+        <!-- Volver al menú -->
+        <a href="menu.html" class="btn btn-dark btn-block mt-3">
+    Volver al Menú Principal
     </a>
+
+    </div>
 </div>
 
-<!-- Modal Nuevo Contacto -->
+<!-- Modal para agregar contacto -->
 <div class="modal fade" id="addContactModal">
     <div class="modal-dialog">
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5>Nuevo Contacto</h5>
+                <h5 class="modal-title">Nuevo Contacto</h5>
                 <button class="close" data-dismiss="modal">&times;</button>
             </div>
 
@@ -114,66 +112,44 @@
 <script>
 $(document).ready(function () {
 
-/* == 1. Saldo Inicial == */
     const saldoInicial = 3000000;
 
-    // Inicializar saldo
-    let saldoGuardado = parseInt(localStorage.getItem('saldo'), 10);
-    if (isNaN(saldoGuardado)) {
+    if (isNaN(parseInt(localStorage.getItem('saldo')))) {
         localStorage.setItem('saldo', saldoInicial);
     }
 
     function getSaldo() {
-        let saldo = parseInt(localStorage.getItem('saldo'), 10);
-        return isNaN(saldo) ? 0 : saldo;
-    }
-
-    function formatNumero(num) {
-        return num.toLocaleString('es-CL', { minimumFractionDigits: 0 });
+        return parseInt(localStorage.getItem('saldo'), 10) || 0;
     }
 
     function mostrarSaldo() {
-        $('#saldoUsuario').text(`Saldo: $${formatNumero(getSaldo())}`);
+        $('#saldoUsuario').text(`Saldo: $${getSaldo().toLocaleString('es-CL')}`);
     }
 
     mostrarSaldo();
 
-    /* == 2. Contantos Base == */
     if (!localStorage.getItem('contactos')) {
-        let contactosIniciales = [
+        localStorage.setItem('contactos', JSON.stringify([
             { nombre: "Juan Pérez", rut: "12.345.678-9", banco: "Banco Estado", numero: "12345678" },
             { nombre: "María González", rut: "9.876.543-2", banco: "Banco de Chile", numero: "87654321" },
             { nombre: "Carlos Tapia", rut: "15.111.222-3", banco: "Banco Santander", numero: "15111222" }
-        ];
-        localStorage.setItem('contactos', JSON.stringify(contactosIniciales));
+        ]));
     }
 
     function mostrarContactos() {
-        let contactos = JSON.parse(localStorage.getItem('contactos')) || [];
-        $('#contactList').html('');
+        const contactos = JSON.parse(localStorage.getItem('contactos'));
+        $('#contactList').empty();
 
-        contactos.forEach(function (c, index) {
+        contactos.forEach((c, i) => {
             $('#contactList').append(`
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <div>
                         <strong>${c.nombre}</strong><br>
-                        <small class="text-muted">
-                            RUT: ${c.rut} | ${c.banco}
-                        </small>
+                        <small class="text-muted">RUT: ${c.rut} | ${c.banco}</small>
                     </div>
-
-                    <div>
-                        <button 
-                            class="btn btn-sm btn-outline-primary seleccionar-contacto"
-                            data-nombre="${c.nombre}">
-                            Seleccionar
-                        </button>
-
-                        <button 
-                            class="btn btn-sm btn-outline-danger eliminar-contacto"
-                            data-index="${index}">
-                            Eliminar
-                        </button>
+                    <div class="d-flex">
+                        <button class="btn seleccionar-contacto" data-nombre="${c.nombre}">Seleccionar</button>
+                        <button class="eliminar-contacto" data-index="${i}">&times;</button>
                     </div>
                 </li>
             `);
@@ -182,79 +158,49 @@ $(document).ready(function () {
 
     mostrarContactos();
 
-    /* == 3. Seleccionar Contacto == */
     $(document).on('click', '.seleccionar-contacto', function () {
-        let nombre = $(this).data('nombre');
-        $('#searchContact').val(nombre);
+        $('#searchContact').val($(this).data('nombre'));
     });
 
-    /* == 4. Elimiinar Contacto == */
     $(document).on('click', '.eliminar-contacto', function () {
-        if (!confirm('¿Seguro que deseas eliminar este contacto?')) return;
-
-        let index = $(this).data('index');
-        let contactos = JSON.parse(localStorage.getItem('contactos')) || [];
-        contactos.splice(index, 1);
+        if (!confirm('¿Eliminar contacto?')) return;
+        const contactos = JSON.parse(localStorage.getItem('contactos'));
+        contactos.splice($(this).data('index'), 1);
         localStorage.setItem('contactos', JSON.stringify(contactos));
-
         mostrarContactos();
     });
 
-    /* == 5. Agregar nuevo contacto == */
     $('#saveContactBtn').click(function () {
-        let nombre = $('#newContactName').val().trim();
-        let rut = $('#newContactRUT').val().trim();
-        let banco = $('#newContactBank').val();
-        let numero = $('#newContactNumber').val().trim();
-
-        if (!nombre || !rut || !numero) {
-            alert('Completa todos los campos.');
-            return;
-        }
-
-        let contactos = JSON.parse(localStorage.getItem('contactos')) || [];
-        contactos.push({ nombre, rut, banco, numero });
+        const contactos = JSON.parse(localStorage.getItem('contactos'));
+        contactos.push({
+            nombre: $('#newContactName').val(),
+            rut: $('#newContactRUT').val(),
+            banco: $('#newContactBank').val(),
+            numero: $('#newContactNumber').val()
+        });
         localStorage.setItem('contactos', JSON.stringify(contactos));
-
-        mostrarContactos();
-
         $('#addContactModal').modal('hide');
         $('#addContactForm')[0].reset();
+        mostrarContactos();
     });
 
-    /* == 6. Envío de Dinero == */
     $('#btnEnviarDinero').click(function () {
-        let contacto = $('#searchContact').val();
-        let monto = parseInt($('#montoEnvio').val(), 10);
+        const monto = parseInt($('#montoEnvio').val());
+        const contacto = $('#searchContact').val();
         let saldo = getSaldo();
 
-        if (!contacto) { alert('Debes seleccionar un contacto.'); return; }
-        if (!monto || monto <= 0) { alert('Ingresa un monto válido.'); return; }
-        if (monto > saldo) { alert('Saldo insuficiente.'); return; }
+        if (!contacto || !monto || monto <= 0 || monto > saldo) return;
 
-        if (confirm(`¿Confirmas enviar $${monto.toLocaleString()} a ${contacto}?`)) {
-            // Restar saldo
-            saldo -= monto;
-            localStorage.setItem('saldo', saldo);
-            mostrarSaldo();
+        saldo -= monto;
+        localStorage.setItem('saldo', saldo);
+        mostrarSaldo();
 
-            // Guardar movimiento en historial
-            let historial = JSON.parse(localStorage.getItem('historial')) || [];
-            historial.unshift({
-                tipo: 'Envío',
-                descripcion: `Dinero enviado a ${contacto}`,
-                monto: monto,
-                fecha: new Date().toLocaleString(),
-                esIngreso: false
-            });
-            localStorage.setItem('historial', JSON.stringify(historial));
-
-            $('#mensajeEnvio').text(`Has enviado $${monto.toLocaleString()} a ${contacto}.`);
-            $('#montoEnvio').val('');
-            $('#searchContact').val('');
-        }
+        $('#mensajeEnvio').text(`Has enviado $${monto.toLocaleString()} a ${contacto}`);
+        $('#montoEnvio').val('');
+        $('#searchContact').val('');
     });
 });
 </script>
+
 </body>
 </html>
