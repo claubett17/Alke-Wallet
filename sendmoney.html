@@ -49,12 +49,12 @@
             Enviar dinero
         </button>
 
-        <p id="mensajeEnvio" class="text-success text-center mt-2"></p>
+        <p id="mensajeEnvio" class="text-center mt-3"></p>
 
         <!-- Volver al menú -->
         <a href="menu.html" class="btn btn-dark btn-block mt-3">
-    Volver al Menú Principal
-    </a>
+            Volver al Menú Principal
+        </a>
 
     </div>
 </div>
@@ -184,21 +184,38 @@ $(document).ready(function () {
         mostrarContactos();
     });
 
+    // Enviar dinero con validación de saldo
     $('#btnEnviarDinero').click(function () {
         const monto = parseInt($('#montoEnvio').val());
         const contacto = $('#searchContact').val();
         let saldo = getSaldo();
 
-        if (!contacto || !monto || monto <= 0 || monto > saldo) return;
+        // Validaciones
+        if (!contacto) {
+            $('#mensajeEnvio').removeClass().addClass('text-danger text-center mt-3').text('Seleccione un contacto');
+            return;
+        }
+        if (!monto || monto <= 0) {
+            $('#mensajeEnvio').removeClass().addClass('text-danger text-center mt-3').text('Ingrese un monto válido');
+            return;
+        }
+        if (monto > saldo) {
+            $('#mensajeEnvio').removeClass().addClass('text-danger text-center mt-3').text('Saldo insuficiente');
+            return;
+        }
 
+        // Si pasa todas las validaciones
         saldo -= monto;
         localStorage.setItem('saldo', saldo);
         mostrarSaldo();
 
-        $('#mensajeEnvio').text(`Has enviado $${monto.toLocaleString()} a ${contacto}`);
+        $('#mensajeEnvio').removeClass().addClass('text-success text-center mt-3')
+            .text(`Has enviado $${monto.toLocaleString()} a ${contacto}`);
+
         $('#montoEnvio').val('');
         $('#searchContact').val('');
     });
+
 });
 </script>
 

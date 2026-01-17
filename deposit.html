@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="bg-light">
 
 <div class="wallet-container">
     <div class="wallet-card">
@@ -26,7 +26,13 @@
         <form id="depositForm">
             <div class="form-group">
                 <label>Monto a depositar</label>
-                <input type="number" id="inputDeposito" class="form-control form-control-lg" min="1" required>
+                <input
+                    type="number"
+                    id="inputDeposito"
+                    class="form-control form-control-lg"
+                    min="1"
+                    required
+                >
             </div>
 
             <button type="submit" class="btn btn-success btn-block">
@@ -35,7 +41,7 @@
         </form>
 
         <a href="menu.html" class="btn btn-dark btn-block mt-3">
-        Volver al Menú Principal
+            Volver al Menú Principal
         </a>
 
     </div>
@@ -47,7 +53,7 @@
 $(document).ready(function () {
 
     function getSaldo() {
-        return parseInt(localStorage.getItem('saldo')) || 3000000;
+        return parseInt(localStorage.getItem('saldo'), 10) || 3000000;
     }
 
     function setSaldo(valor) {
@@ -65,7 +71,7 @@ $(document).ready(function () {
     $('#depositForm').submit(function (e) {
         e.preventDefault();
 
-        const monto = parseInt($('#inputDeposito').val());
+        const monto = parseInt($('#inputDeposito').val(), 10);
 
         if (isNaN(monto) || monto <= 0) {
             $('#alertMensaje')
